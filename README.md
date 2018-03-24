@@ -13,7 +13,7 @@ Set up a PHP file (or some other web service to receive an HTTP POST) on a publi
 <?php
         $subject = $_POST['subject'];
         $body = $_POST['body'];
-        mail("YOUR@EXAMPLE.com", $subject, $body)
+        mail("YOU@EXAMPLE.com", $subject, $body)
 ?>
 ```
 
