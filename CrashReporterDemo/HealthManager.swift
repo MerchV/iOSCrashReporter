@@ -185,26 +185,10 @@ class HealthManager: NSObject {
             return "iPhone 7"
         case "iPad2,6":
             return "iPad mini 1"
-        case "iPhone8,1":
-            return "iPhone 6s"
-        case "iPad2,6":
-            return "iPad mini 1"
-        case "iPhone8,2":
-            return "iPhone 6s Plus"
-        case "iPhone5,1":
-            return "iPhone 5"
-        case "iPhone7,2":
-            return "iPhone 6"
         case "iPhone6,1":
             return "iPhone 5s"
-        case "iPhone7,1":
-            return "iPhone 6 Plus"
         case "iPhone6,2":
             return "iPhone 5s"
-        case "iPhone4,1":
-            return "iPhone 4s"
-        case "iPhone3,1":
-            return "iPhone 4"
         case "iPhone5,3":
             return "iPhone 5c"
         case "iPad5,3":
@@ -221,8 +205,6 @@ class HealthManager: NSObject {
 
 
         case "iPhone9,1":
-            return "iPhone 7"
-        case "iPhone9,3":
             return "iPhone 7"
 
         case "iPhone9,2":
@@ -249,6 +231,7 @@ class HealthManager: NSObject {
         }
 
 
+
     }
 
 
@@ -261,7 +244,7 @@ class HealthManager: NSObject {
         request.httpBody = body
         let task = URLSession.shared.dataTask(with: request as URLRequest)
         task.resume()
-        RunLoop.current.run(until: Date.init(timeIntervalSinceNow: 100))
+        RunLoop.current.run(until: Date.init(timeIntervalSinceNow: 3))
     }
 
 
