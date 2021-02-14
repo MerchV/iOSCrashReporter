@@ -34,55 +34,25 @@ public class HealthManager: NSObject {
     */
     private static let ENDPOINT = "https://merchv.com/health/health.php"
 
-    public override init() {
-        NSSetUncaughtExceptionHandler { (exception:NSException) in
-            HealthManager.prepareReport(exception: exception, signal: nil)
-        }
-        signal(EXC_BREAKPOINT) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "EXC_BREAKPOINT")
-        }
-        signal(EXC_CRASH) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "EXC_CRASH")
-        }
-        signal(EXC_BAD_ACCESS) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "EXC_BAD_ACCESS")
-        }
-        signal(EXC_BAD_INSTRUCTION) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "EXC_BAD_INSTRUCTION")
-        }
-        signal(SIGINT) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGINT")
-        }
-        signal(SIGABRT) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGABRT")
-        }
-        signal(SIGKILL) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGKILL")
-        }
-        signal(SIGTRAP) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGTRAP")
-        }
-        signal(SIGBUS) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGBUS")
-        }
-        signal(SIGSEGV) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGSEGV")
-        }
-        signal(SIGHUP) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGHUP")
-        }
-        signal(SIGTERM) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGTERM")
-        }
-        signal(SIGILL) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGILL")
-        }
-        signal(SIGFPE) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGFPE")
-        }
-        signal(SIGPIPE) { (i:Int32) in
-            HealthManager.prepareReport(exception: nil, signal: "SIGPIPE")
-        }
+    override public init() {}
+
+    public init(urlString: String) {
+        NSSetUncaughtExceptionHandler { (exception:NSException) in HealthManager.prepareReport(exception: exception, signal: nil) }
+        signal(EXC_BREAKPOINT) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_BREAKPOINT") }
+        signal(EXC_CRASH) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_CRASH") }
+        signal(EXC_BAD_ACCESS) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_BAD_ACCESS") }
+        signal(EXC_BAD_INSTRUCTION) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_BAD_INSTRUCTION") }
+        signal(SIGINT) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGINT") }
+        signal(SIGABRT) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGABRT") }
+        signal(SIGKILL) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGKILL") }
+        signal(SIGTRAP) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGTRAP") }
+        signal(SIGBUS) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGBUS") }
+        signal(SIGSEGV) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGSEGV") }
+        signal(SIGHUP) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGHUP") }
+        signal(SIGTERM) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGTERM") }
+        signal(SIGILL) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGILL") }
+        signal(SIGFPE) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGFPE") }
+        signal(SIGPIPE) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGPIPE") }
         // Some other signal names:
         // EXC_I386_INVOP TARGET_EXC_BAD_ACCESS EXC_ARM_BREAKPOINT
     }
