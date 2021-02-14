@@ -6,7 +6,7 @@ import Foundation
 import SystemConfiguration
 import UIKit
 
-class HealthManager: NSObject {
+public class HealthManager: NSObject {
 
     ////////////////////////////////////////
     // CONFIGURATION
