@@ -34,7 +34,7 @@ class HealthManager: NSObject {
     */
     private static let ENDPOINT = "https://merchv.com/health/health.php"
 
-    override init() {
+    public override init() {
         NSSetUncaughtExceptionHandler { (exception:NSException) in
             HealthManager.prepareReport(exception: exception, signal: nil)
         }
