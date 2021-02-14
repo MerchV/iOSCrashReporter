@@ -2,6 +2,8 @@
 //  HealthManager.swift
 //
 
+import Foundation
+import SystemConfiguration
 import UIKit
 
 class HealthManager: NSObject {
