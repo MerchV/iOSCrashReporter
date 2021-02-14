@@ -30,7 +30,7 @@ class HealthManager: NSObject {
     /*
         Specify the URL to the publicly visible PHP file.
     */
-    private static let ENDPOINT = "https://EXAMPLE.com/health/health.php"
+    private static let ENDPOINT = "https://merchv.com/health/health.php"
 
     override init() {
         NSSetUncaughtExceptionHandler { (exception:NSException) in
