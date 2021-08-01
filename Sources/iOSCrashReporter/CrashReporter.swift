@@ -32,7 +32,7 @@ public class CrashReporter: NSObject {
     /*
         Specify the URL to the publicly visible PHP file.
     */
-    private static let ENDPOINT = "https://merchv.com/health/health.php"
+    public static var ENDPOINT = "https://merchv.com/health/health.php"
 
     override public init() {}
 
