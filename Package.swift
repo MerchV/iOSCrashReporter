@@ -7,7 +7,7 @@ let package = Package(
     name: "iOSCrashReporter",
     platforms: [
         .macOS(.v10_15),
-        .iOS(.v13)
+        .iOS(.v12)
     ],
     products: [
         .library(name: "iOSCrashReporter", targets: ["iOSCrashReporter"]),
