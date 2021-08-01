@@ -1,9 +1,13 @@
 # iOSCrashReporter
 
-
 ## DESCRIPTION
 
-The class 'HealthManager' can be added to an iOS project to capture crashes (both signals and exceptions) and send a stack trace and other information to an e-mail address.
+This package can be added to an iOS project to capture crashes (both signals and exceptions) and send a stack trace and other information as an HTTP POST to a PHP file which you control which in turn sends that information to your e-mail address.
+
+## INSTALLATION
+#### Swift Package Manager
+Add https://github.com/MerchV/iOSCrashReporter as a dependency.
+
 
 ## INSTRUCTIONS
 
@@ -19,32 +23,40 @@ Set up a PHP file (or some other web service to receive an HTTP POST) on a publi
 
 This PHP file will receive the subject and body parameters sent in an HTTP POST request from the crash reporter. Then, the crash report is sent to the e-mail address specified using the Linux mail program. 
 
-Extract just the HealthManager.swift file from this repository. Edit line 33 and change the URL to the PHP file. 
 
-To use HealthManager just initialize the class and keep a strong reference to it, perhaps in AppDelegate:
+## CONFIGURATION
+
+In AppDelegate:
+1. Import iOSCrashReporter
+2. Set the URL to your PHP file to the static ENDPOINT variable on CrashReporter.
+3. Initialize CrashReporter. You don't need to keep a reference to it.
+
 
 ```
 import UIKit
+import iOSCrashReporter // 1
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    private var crashReporter: HealthManager!
 
-    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
-        crashReporter = HealthManager() // This also works: let _ = HealthManager()
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        CrashReporter.ENDPOINT = URL(string: "https://your-web-host.com/crash.php")! // 2
+        _ = CrashReporter() // 3
         return true
     }
 
 }
+
+
 ```
 
-Curiously, it also seems to work without keeping a strong reference to it.
 
-## DEMO PROJECT
+## TESTING
+When testing for a crash, remember that the crash signal won't be captured while connected to the Xcode debugger. Run the app without being connected to Xcode to try a crash.
 
-To try the demo project in this repository, edit line 33 to add your PHP file URL string. Build and run the Xcode project on the simulator or device, then stop the project in Xcode. Launch the app again on the simulator or device. Signals won't be sent while connected to the Xcode debugger, but exceptions will. On the app, select "Cause Exception Crash" or "Cause Signal Crash."
+## REPORTS
 
 An e-mail for an exception crash will look like this:
 
@@ -132,4 +144,4 @@ Crash report e-mails may contain stack traces with lines that look like these:
 11 UIKit 0x28f047b3 <redacted> 134
 ```
 
-These lines may not show method names or anything useful. That's due to symbolication. The lines would need to be manually symbolicated. If I can figure out how to automate that process I will add it to this repository, but until then some crash reports just might not contain any useful information.
+These lines may not show method names or anything useful. That's due to symbolication. The lines would need to be manually symbolicated. 
