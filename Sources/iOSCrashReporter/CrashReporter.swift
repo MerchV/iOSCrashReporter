@@ -1,39 +1,10 @@
-//
-//  HealthManager.swift
-//
-
 import Foundation
 import SystemConfiguration
-//import UIKit
+import UIKit
 
 public class CrashReporter: NSObject {
 
-    ////////////////////////////////////////
-    // CONFIGURATION
-    ////////////////////////////////////////
-
-    // STEP 1
-
-    /*
-        Place a PHP file, such as the one below, on a publicly visible web host. This PHP file will receive the subject and body parameters from the POST request and send those to the e-mail address specified.
-     */
-
-    /*
-         <?php
-         $subject = $_POST['subject'];
-         $body = $_POST['body'];
-         mail("YOU@EXAMPLE.COM", $subject, $body)
-         ?>
-     */
-
-
-    // STEP 2
-
-    /*
-        Specify the URL to the publicly visible PHP file.
-    */
     public static var ENDPOINT: URL?
-
 
     override public init() {
         guard CrashReporter.ENDPOINT != nil else { fatalError("Set CrashReporter.ENDPOINT first.") }
@@ -68,13 +39,14 @@ public class CrashReporter: NSObject {
         let subject = CrashReporter.prepareSubject()
         var body = ""
         var uuid = ""
-        if let existingUUID = UserDefaults.standard.value(forKey: "HealthUUID") as? String {
+        if let existingUUID = UserDefaults.standard.value(forKey: "CrashReporterUUID") as? String {
             uuid = existingUUID
         } else {
             uuid = UUID().uuidString
-            UserDefaults.standard.set(uuid, forKey: "HealthUUID")
+            UserDefaults.standard.set(uuid, forKey: "CrashReporterUUID")
             UserDefaults.standard.synchronize()
         }
+        body.append("User: ")
         body.append(uuid)
         body.append("\n\n")
         if exception != nil { // This is an exception crash
@@ -92,6 +64,7 @@ public class CrashReporter: NSObject {
             Thread.callStackSymbols.forEach({ (string:String) in
                 threadStackTrace.append("\(string)\n")
             })
+            body.append("Signal: ")
             body.append(signal!)
             body.append("\n\n")
             body.append(threadStackTrace)
@@ -115,7 +88,7 @@ public class CrashReporter: NSObject {
         var machine = [CChar](repeating: 0, count: Int(size))
         sysctlbyname("hw.machine", &machine, &size, nil, 0)
         let platform = String(cString: machine)
-        let product = CrashReporter.modelMapping(model: platform)
+        let product = ModelLookup.getProduct(platform: .iOS, model: platform)
 
         var subject = ""
         subject.append(Bundle.main.bundleIdentifier ?? "")
@@ -127,16 +100,9 @@ public class CrashReporter: NSObject {
         subject.append(" | ")
         subject.append(product)
         subject.append(" | ")
-//        subject.append("\(UIDevice.current.systemVersion)")
+        subject.append("\(UIDevice.current.systemVersion)")
         return subject
 
-    }
-
-    static private func modelMapping(model: String) -> String {
-        switch model {
-        default:
-            return model
-        }
     }
 
 
