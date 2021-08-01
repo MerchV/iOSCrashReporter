@@ -8,31 +8,51 @@ public class CrashReporter: NSObject {
 
     override public init() {
         guard CrashReporter.ENDPOINT != nil else { fatalError("Set CrashReporter.ENDPOINT first.") }
-        NSSetUncaughtExceptionHandler { (exception:NSException) in CrashReporter.prepareReport(exception: exception, signal: nil) }
-        signal(EXC_BREAKPOINT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BREAKPOINT") }
-        signal(EXC_CRASH) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_CRASH") }
-        signal(EXC_BAD_ACCESS) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BAD_ACCESS") }
-        signal(EXC_BAD_INSTRUCTION) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BAD_INSTRUCTION") }
-        signal(SIGINT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGINT") }
-        signal(SIGABRT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGABRT") }
-        signal(SIGKILL) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGKILL") }
-        signal(SIGTRAP) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGTRAP") }
-        signal(SIGBUS) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGBUS") }
-        signal(SIGSEGV) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGSEGV") }
-        signal(SIGHUP) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGHUP") }
-        signal(SIGTERM) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGTERM") }
-        signal(SIGILL) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGILL") }
-        signal(SIGFPE) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGFPE") }
-        signal(SIGPIPE) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGPIPE") }
+        NSSetUncaughtExceptionHandler { (exception:NSException) in CrashReporter.prepareReport(CrashReporter.prepareExceptionStackTrace(exception: exception)) }
+        signal(EXC_BREAKPOINT) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("EXC_BREAKPOINT")) }
+        signal(EXC_CRASH) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("EXC_CRASH")) }
+        signal(EXC_BAD_ACCESS) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("EXC_BAD_ACCESS")) }
+        signal(EXC_BAD_INSTRUCTION) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("EXC_BAD_INSTRUCTION")) }
+        signal(SIGINT) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGINT")) }
+        signal(SIGABRT) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGABRT")) }
+        signal(SIGKILL) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGKILL")) }
+        signal(SIGTRAP) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGTRAP")) }
+        signal(SIGBUS) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGBUS")) }
+        signal(SIGSEGV) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGSEGV")) }
+        signal(SIGHUP) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGHUP")) }
+        signal(SIGTERM) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGTERM")) }
+        signal(SIGILL) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGILL")) }
+        signal(SIGFPE) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGFPE")) }
+        signal(SIGPIPE) { (i:Int32) in CrashReporter.prepareReport(CrashReporter.prepareSignalStackTrace("SIGPIPE")) }
         // Some other signal names:
         // EXC_I386_INVOP TARGET_EXC_BAD_ACCESS EXC_ARM_BREAKPOINT
     }
 
 
-    static var signalReportWasSent = false // Signals occur repeatedly, and we only want to send one crash report
+    static private var signalReportWasSent = false // Signals occur repeatedly, and we only want to send one crash report
 
-    static func prepareReport(exception: NSException?, signal: String?) {
-        if signal != nil && signalReportWasSent == true {
+    static private func prepareSignalStackTrace(_ signal: String) -> String {
+        var threadStackTrace = ""
+        threadStackTrace.append("Signal: ")
+        threadStackTrace.append(signal)
+        threadStackTrace.append("\n\n")
+        _ = Thread.callStackSymbols.map({ threadStackTrace.append("\($0)\n") })
+        return threadStackTrace
+    }
+
+    static private func prepareExceptionStackTrace(exception: NSException) -> String {
+        var exceptionStackTrace = ""
+        exceptionStackTrace.append("\(exception.name)")
+        exceptionStackTrace.append("\n\n")
+        exceptionStackTrace.append("\(exception.reason ?? "")")
+        exceptionStackTrace.append("\n\n")
+        exceptionStackTrace.append(exceptionStackTrace)
+        _ = exception.callStackSymbols.map({ exceptionStackTrace.append("\($0)\n") })
+        return exceptionStackTrace
+    }
+
+    static private func prepareReport(_ stackTrace: String) {
+        if signalReportWasSent == true {
             return // Avoid sending multiple signal reports
         }
         signalReportWasSent = true
@@ -52,30 +72,8 @@ public class CrashReporter: NSObject {
         body.append("\n")
         body.append(prepareDeviceDetails())
         body.append("\n\n")
-        if exception != nil { // This is an exception crash
-            var exceptionStackTrace = ""
-            for stackItemString in exception!.callStackSymbols {
-                exceptionStackTrace.append("\(stackItemString)\n")
-            }
-            body.append("\(exception!.name)")
-            body.append("\n\n")
-            body.append("\(exception!.reason ?? "")")
-            body.append("\n\n")
-            body.append(exceptionStackTrace)
-        } else if signal != nil { // This is a signal crash
-            var threadStackTrace = ""
-            Thread.callStackSymbols.forEach({ (string:String) in
-                threadStackTrace.append("\(string)\n")
-            })
-            body.append("Signal: ")
-            body.append(signal!)
-            body.append("\n\n")
-            body.append(threadStackTrace)
-        }
-        var parameters = ""
-        parameters.append("&subject=\(subject)")
-        parameters.append("&body=\(body)")
-        CrashReporter.sendReport(parameters: parameters)
+        body.append(stackTrace)
+        CrashReporter.sendReport(subject: subject, body: body)
     }
 
     static private func prepareDeviceDetails() -> String {
@@ -112,8 +110,10 @@ public class CrashReporter: NSObject {
     }
 
 
-    // Performs the HTTP POST request to the PHP file specified above.
-    static func sendReport(parameters: String) {
+    static private func sendReport(subject: String, body: String) {
+        var parameters = ""
+        parameters.append("&subject=\(subject)")
+        parameters.append("&body=\(body)")
         let request = NSMutableURLRequest(url: ENDPOINT!)
         request.httpMethod = "POST"
         let body = parameters.data(using: String.Encoding.utf8)
