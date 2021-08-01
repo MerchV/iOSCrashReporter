@@ -32,11 +32,11 @@ public class CrashReporter: NSObject {
     /*
         Specify the URL to the publicly visible PHP file.
     */
-    public static var ENDPOINT = "https://merchv.com/health/health.php"
+    public static var ENDPOINT: URL?
 
-    override public init() {}
 
-    public init(urlString: String) {
+    override public init() {
+        guard CrashReporter.ENDPOINT != nil else { fatalError("Set CrashReporter.ENDPOINT first.") }
         NSSetUncaughtExceptionHandler { (exception:NSException) in CrashReporter.prepareReport(exception: exception, signal: nil) }
         signal(EXC_BREAKPOINT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BREAKPOINT") }
         signal(EXC_CRASH) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_CRASH") }
@@ -142,8 +142,7 @@ public class CrashReporter: NSObject {
 
     // Performs the HTTP POST request to the PHP file specified above.
     static func sendReport(parameters: String) {
-        let url = URL(string: ENDPOINT)!
-        let request = NSMutableURLRequest(url: url)
+        let request = NSMutableURLRequest(url: ENDPOINT!)
         request.httpMethod = "POST"
         let body = parameters.data(using: String.Encoding.utf8)
         request.httpBody = body
