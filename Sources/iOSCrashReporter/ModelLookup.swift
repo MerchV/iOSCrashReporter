@@ -7,26 +7,23 @@
 
 import Foundation
 
-public enum Platform {
-    case iOS
-    case iPadOS
-}
-
 // https://github.com/pluwen/apple-device-model-list
 public struct ModelLookup {
 
-    static func getProduct(platform: Platform, model: String) -> String {
+    // model is "iPhone" or "iPad"; platform is "iPhone11,8"
+    static func getProduct(model: String, platform: String) -> String {
 
         var resource: String
-        switch platform {
-            case .iOS:
-                resource = "plist/iPhone"
-            case .iPadOS:
-                resource = "plist/iPad"
+        if model == "iPhone" {
+            resource = "plist/iPhone"
+        } else if model == "iPad" {
+            resource = "plist/iPad"
+        } else {
+            return platform 
         }
         guard let url = Bundle.module.url(forResource: resource, withExtension: "plist") else { fatalError() }
         guard let dictionary = NSDictionary(contentsOf: url) else { fatalError() }
-        return dictionary[model] as? String ?? model
+        return dictionary[platform] as? String ?? platform
     }
 
 }
