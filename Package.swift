@@ -4,20 +4,23 @@
 import PackageDescription
 
 let package = Package(
-    name: "CrashReporter",
+    name: "iOSCrashReporter",
     platforms: [
         .macOS(.v10_15),
         .iOS(.v13)
     ],
     products: [
-        .library(name: "CrashReporter", targets: ["CrashReporter"]),
+        .library(name: "iOSCrashReporter", targets: ["iOSCrashReporter"]),
     ],
     dependencies: [],
     targets: [
         .target(
-            name: "CrashReporter",
-            dependencies: []
+            name: "iOSCrashReporter",
+            dependencies: [],
+            resources: [
+                .copy("plist")
+            ]
         ),
-        .testTarget(name: "CrashReporterTests", dependencies: ["CrashReporter"])
+        .testTarget(name: "iOSCrashReporterTests", dependencies: ["iOSCrashReporter"])
     ]
 )

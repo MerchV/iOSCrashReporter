@@ -4,9 +4,9 @@
 
 import Foundation
 import SystemConfiguration
-import UIKit
+//import UIKit
 
-public class HealthManager: NSObject {
+public class CrashReporter: NSObject {
 
     ////////////////////////////////////////
     // CONFIGURATION
@@ -37,22 +37,22 @@ public class HealthManager: NSObject {
     override public init() {}
 
     public init(urlString: String) {
-        NSSetUncaughtExceptionHandler { (exception:NSException) in HealthManager.prepareReport(exception: exception, signal: nil) }
-        signal(EXC_BREAKPOINT) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_BREAKPOINT") }
-        signal(EXC_CRASH) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_CRASH") }
-        signal(EXC_BAD_ACCESS) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_BAD_ACCESS") }
-        signal(EXC_BAD_INSTRUCTION) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "EXC_BAD_INSTRUCTION") }
-        signal(SIGINT) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGINT") }
-        signal(SIGABRT) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGABRT") }
-        signal(SIGKILL) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGKILL") }
-        signal(SIGTRAP) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGTRAP") }
-        signal(SIGBUS) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGBUS") }
-        signal(SIGSEGV) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGSEGV") }
-        signal(SIGHUP) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGHUP") }
-        signal(SIGTERM) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGTERM") }
-        signal(SIGILL) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGILL") }
-        signal(SIGFPE) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGFPE") }
-        signal(SIGPIPE) { (i:Int32) in HealthManager.prepareReport(exception: nil, signal: "SIGPIPE") }
+        NSSetUncaughtExceptionHandler { (exception:NSException) in CrashReporter.prepareReport(exception: exception, signal: nil) }
+        signal(EXC_BREAKPOINT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BREAKPOINT") }
+        signal(EXC_CRASH) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_CRASH") }
+        signal(EXC_BAD_ACCESS) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BAD_ACCESS") }
+        signal(EXC_BAD_INSTRUCTION) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "EXC_BAD_INSTRUCTION") }
+        signal(SIGINT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGINT") }
+        signal(SIGABRT) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGABRT") }
+        signal(SIGKILL) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGKILL") }
+        signal(SIGTRAP) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGTRAP") }
+        signal(SIGBUS) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGBUS") }
+        signal(SIGSEGV) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGSEGV") }
+        signal(SIGHUP) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGHUP") }
+        signal(SIGTERM) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGTERM") }
+        signal(SIGILL) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGILL") }
+        signal(SIGFPE) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGFPE") }
+        signal(SIGPIPE) { (i:Int32) in CrashReporter.prepareReport(exception: nil, signal: "SIGPIPE") }
         // Some other signal names:
         // EXC_I386_INVOP TARGET_EXC_BAD_ACCESS EXC_ARM_BREAKPOINT
     }
@@ -65,7 +65,7 @@ public class HealthManager: NSObject {
             return // Avoid sending multiple signal reports
         }
         signalReportWasSent = true
-        let subject = HealthManager.prepareSubject()
+        let subject = CrashReporter.prepareSubject()
         var body = ""
         var uuid = ""
         if let existingUUID = UserDefaults.standard.value(forKey: "HealthUUID") as? String {
@@ -99,7 +99,7 @@ public class HealthManager: NSObject {
         var parameters = ""
         parameters.append("&subject=\(subject)")
         parameters.append("&body=\(body)")
-        HealthManager.sendReport(parameters: parameters)
+        CrashReporter.sendReport(parameters: parameters)
     }
 
 
@@ -115,7 +115,7 @@ public class HealthManager: NSObject {
         var machine = [CChar](repeating: 0, count: Int(size))
         sysctlbyname("hw.machine", &machine, &size, nil, 0)
         let platform = String(cString: machine)
-        let product = HealthManager.modelMapping(model: platform)
+        let product = CrashReporter.modelMapping(model: platform)
 
         var subject = ""
         subject.append(Bundle.main.bundleIdentifier ?? "")
@@ -127,83 +127,16 @@ public class HealthManager: NSObject {
         subject.append(" | ")
         subject.append(product)
         subject.append(" | ")
-        subject.append("\(UIDevice.current.systemVersion)")
+//        subject.append("\(UIDevice.current.systemVersion)")
         return subject
 
     }
 
     static private func modelMapping(model: String) -> String {
-        // https://www.theiphonewiki.com/wiki/Models
-
         switch model {
-        case "x86_64":
-            return "Simulator"
-
-        case "iPhone3,1":
-            return "iPhone 4"
-        case "iPhone4,1":
-            return "iPhone 4s"
-        case "iPhone5,1":
-            return "iPhone 5"
-        case "iPhone7,2":
-            return "iPhone 6"
-        case "iPhone7,1":
-            return "iPhone 6 Plus"
-        case "iPhone8,1":
-            return "iPhone 6s"
-        case "iPhone8,2":
-            return "iPhone 6s Plus"
-        case "iPhone9,3":
-            return "iPhone 7"
-        case "iPad2,6":
-            return "iPad mini 1"
-        case "iPhone6,1":
-            return "iPhone 5s"
-        case "iPhone6,2":
-            return "iPhone 5s"
-        case "iPhone5,3":
-            return "iPhone 5c"
-        case "iPad5,3":
-            return "iPad Air 2"
-        case "iPhone3,2":
-            return "iPhone 4"
-        case "iPad2,2":
-            return "iPad 2 GSM"
-        case "iPad3,1":
-            return "iPad 3"
-
-        case "iPhone8,4":
-            return "iPhone SE"
-
-
-        case "iPhone9,1":
-            return "iPhone 7"
-
-        case "iPhone9,2":
-            return "iPhone 7 Plus"
-        case "iPhone9,4":
-            return "iPhone 7 Plus"
-
-        case "iPhone10,1":
-            return "iPhone 8"
-        case "iPhone10,4":
-            return "iPhone 8"
-
-        case "iPhone10,2":
-            return "iPhone 8 Plus"
-        case "iPhone10,5":
-            return "iPhone 8 Plus"
-
-        case "iPhone10,3":
-            return "iPhone X"
-        case "iPhone10,6":
-            return "iPhone X"
         default:
             return model
         }
-
-
-
     }
 
 
