@@ -91,6 +91,9 @@ public class CrashReporter: NSObject {
         let product = ModelLookup.getProduct(platform: .iOS, model: platform)
 
         var subject = ""
+        let bundleName = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleName")!)"
+        subject.append(bundleName)
+        subject.append(" | ")
         subject.append(Bundle.main.bundleIdentifier ?? "")
         subject.append(" | ")
         let versionString = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)"
