@@ -36,7 +36,8 @@ public class CrashReporter: NSObject {
             return // Avoid sending multiple signal reports
         }
         signalReportWasSent = true
-        let subject = CrashReporter.prepareSubject()
+        let bundleName = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleName")!)"
+        let subject = "\(bundleName) crash! 💥"
         var body = ""
         var uuid = ""
         if let existingUUID = UserDefaults.standard.value(forKey: "CrashReporterUUID") as? String {
@@ -49,6 +50,7 @@ public class CrashReporter: NSObject {
         body.append("User: ")
         body.append(uuid)
         body.append("\n\n")
+        body.append(prepareSubject())
         if exception != nil { // This is an exception crash
             var exceptionStackTrace = ""
             for stackItemString in exception!.callStackSymbols {
@@ -93,16 +95,16 @@ public class CrashReporter: NSObject {
         var subject = ""
         let bundleName = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleName")!)"
         subject.append(bundleName)
-        subject.append(" | ")
+        subject.append("\n")
         subject.append(Bundle.main.bundleIdentifier ?? "")
-        subject.append(" | ")
+        subject.append("\n")
         let versionString = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)"
         let buildString = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)"
         let version = "\(versionString) (\(buildString))"
         subject.append("\(version)")
-        subject.append(" | ")
+        subject.append("\n")
         subject.append(product)
-        subject.append(" | ")
+        subject.append("\n")
         subject.append("iOS ")
         subject.append("\(UIDevice.current.systemVersion)")
         return subject
