@@ -49,7 +49,7 @@ public class CrashReporter: NSObject {
         }
         body.append("User: ")
         body.append(uuid)
-        body.append("\n\n")
+        body.append("\n")
         body.append(prepareDeviceDetails())
         body.append("\n\n")
         if exception != nil { // This is an exception crash
@@ -87,7 +87,6 @@ public class CrashReporter: NSObject {
         let product = ModelLookup.getProduct(platform: .iOS, model: platform)
 
         var subject = ""
-        subject.append("\n")
         subject.append("Bundle identifier: ")
         subject.append(Bundle.main.bundleIdentifier ?? "")
         subject.append("\n")
@@ -105,6 +104,7 @@ public class CrashReporter: NSObject {
         subject.append("Product: ")
         subject.append(product)
         subject.append("\n")
+        subject.append("System: ")
         subject.append("iOS ")
         subject.append("\(UIDevice.current.systemVersion)")
         return subject
