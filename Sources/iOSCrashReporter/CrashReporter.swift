@@ -50,7 +50,8 @@ public class CrashReporter: NSObject {
         body.append("User: ")
         body.append(uuid)
         body.append("\n\n")
-        body.append(prepareSubject())
+        body.append(prepareDeviceDetails())
+        body.append("\n\n")
         if exception != nil { // This is an exception crash
             var exceptionStackTrace = ""
             for stackItemString in exception!.callStackSymbols {
@@ -77,14 +78,7 @@ public class CrashReporter: NSObject {
         CrashReporter.sendReport(parameters: parameters)
     }
 
-
-
-
-    // Produces a string in this format:
-    // <bundle id> | <bundle version> <bundle build number> | <model name> | <iOS version>
-    // E.g., com.example.MyApp | 2.1 (1) | iPad mini 1 | 9.3.5
-    // This will be used for the subject of the e-mail of the crash report.
-    static private func prepareSubject() -> String {
+    static private func prepareDeviceDetails() -> String {
         var size : size_t = 0
         sysctlbyname("hw.machine", nil, &size, nil, 0)
         var machine = [CChar](repeating: 0, count: Int(size))
@@ -93,16 +87,22 @@ public class CrashReporter: NSObject {
         let product = ModelLookup.getProduct(platform: .iOS, model: platform)
 
         var subject = ""
-        let bundleName = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleName")!)"
-        subject.append(bundleName)
         subject.append("\n")
+        subject.append("Bundle identifier: ")
         subject.append(Bundle.main.bundleIdentifier ?? "")
         subject.append("\n")
+        subject.append("Version: ")
         let versionString = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)"
-        let buildString = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)"
-        let version = "\(versionString) (\(buildString))"
-        subject.append("\(version)")
+        subject.append(versionString)
         subject.append("\n")
+        subject.append("Build: ")
+        let buildString = "\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)"
+        subject.append(buildString)
+        subject.append("\n")
+        subject.append("Model: ")
+        subject.append(platform)
+        subject.append("\n")
+        subject.append("Product: ")
         subject.append(product)
         subject.append("\n")
         subject.append("iOS ")
