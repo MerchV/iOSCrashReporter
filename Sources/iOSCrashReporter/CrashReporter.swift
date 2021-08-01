@@ -100,6 +100,7 @@ public class CrashReporter: NSObject {
         subject.append(" | ")
         subject.append(product)
         subject.append(" | ")
+        subject.append("iOS ")
         subject.append("\(UIDevice.current.systemVersion)")
         return subject
 
