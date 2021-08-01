@@ -54,7 +54,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 ## TESTING
-When testing for a crash, remember that the crash signal won't be captured while connected to the Xcode debugger. Run the app without being connected to Xcode to try a crash.
+When testing for a crash, remember that the crash signal won't be captured while connected to the Xcode debugger. Run the app without being connected to Xcode to try a crash. Exception crashes will be reported while connected to the Xcode debugger.
+
+Here's a way to cause a signal crash:
+```
+var a = [Int]()
+_ = a[0]
+```
+        
+Here's a way to cause an exception crash:
+```
+performSegue(withIdentifier: "ThisSegueDoesNotExist", sender: self)
+```
+
 
 ## REPORTS
 
