@@ -87,14 +87,17 @@ public class CrashReporter: NSObject {
         return uuid
     }
 
-    static private func prepareDeviceDetails() -> String {
+    static private func getDeviceModelAndProduct() -> (String, String) {
         var size: size_t = 0
         sysctlbyname("hw.machine", nil, &size, nil, 0)
         var machine = [CChar](repeating: 0, count: Int(size))
         sysctlbyname("hw.machine", &machine, &size, nil, 0)
         let platform = String(cString: machine)
         let product = ModelLookup.getProduct(platform: .iOS, model: platform)
+        return (platform, product)
+    }
 
+    static private func prepareDeviceDetails() -> String {
         var subject = ""
         subject.append("Bundle identifier: ")
         subject.append(Bundle.main.bundleIdentifier ?? "")
@@ -106,10 +109,11 @@ public class CrashReporter: NSObject {
         subject.append("\(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion")!)")
         subject.append("\n")
         subject.append("Model: ")
-        subject.append(platform)
+        let device = getDeviceModelAndProduct()
+        subject.append(device.0)
         subject.append("\n")
         subject.append("Product: ")
-        subject.append(product)
+        subject.append(device.1)
         subject.append("\n")
         subject.append("System: ")
         subject.append("iOS ")
