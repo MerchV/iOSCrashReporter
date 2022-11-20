@@ -6,7 +6,7 @@ public class CrashReporter: NSObject {
 
     private static var ENDPOINT: URL!
 
-    public init(url: URL) {
+    public init(_ url: URL) {
         CrashReporter.ENDPOINT = url
         super.init()
         registerExceptionHandler()
