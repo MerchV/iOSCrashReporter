@@ -4,10 +4,10 @@ import UIKit
 
 public class CrashReporter: NSObject {
 
-    public static var ENDPOINT: URL?
+    private static var ENDPOINT: URL!
 
-    override public init() {
-        guard CrashReporter.ENDPOINT != nil else { fatalError("Set CrashReporter.ENDPOINT first.") }
+    public init(url: URL) {
+        CrashReporter.ENDPOINT = url
         super.init()
         registerExceptionHandler()
         registerSignalHandler()
