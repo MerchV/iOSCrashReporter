@@ -53,6 +53,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 ```
 
+## In a SwiftUI App:
+
+```
+import SwiftUI
+import iOSCrashReporter
+
+@main
+struct MyApp: App {
+
+    init() {
+        _ = CrashReporter(URL(string: "https://your-web-host.com/crash.php")!)
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+    }
+}
+
+
 
 ## TESTING
 When testing for a crash, remember that the crash signal won't be captured while connected to the Xcode debugger. Run the app without being connected to Xcode to try a crash. Exception crashes will be reported while connected to the Xcode debugger.
