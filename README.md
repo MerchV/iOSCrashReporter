@@ -44,8 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        CrashReporter.ENDPOINT = URL(string: "https://your-web-host.com/crash.php")! // 2
-        _ = CrashReporter() // 3
+        _ = CrashReporter(URL(string: "https://your-web-host.com/crash.php")!)
         return true
     }
 
