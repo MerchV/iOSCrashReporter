@@ -28,12 +28,11 @@ This PHP file will receive the subject and body parameters sent in an HTTP POST 
 
 ## CONFIGURATION
 
-In AppDelegate:
 1. Import iOSCrashReporter
 2. Set the URL to your PHP file to the static ENDPOINT variable on CrashReporter.
 3. Initialize CrashReporter. You don't need to keep a reference to it.
 
-
+# In AppDelegate:
 ```
 import UIKit
 import iOSCrashReporter // 1
@@ -54,7 +53,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 ```
 
 ## In a SwiftUI App:
-
 ```
 import SwiftUI
 import iOSCrashReporter
