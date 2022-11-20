@@ -45,8 +45,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
-
-
 ```
 
 #### In a SwiftUI App:
