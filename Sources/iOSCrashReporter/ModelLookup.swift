@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Merch on 2021-02-14.
-//
 
 import Foundation
 

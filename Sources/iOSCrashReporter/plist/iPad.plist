@@ -124,5 +124,13 @@
 	<string>Pad Pro 12.9-inch 4</string>
 	<key>iPad8,12</key>
 	<string>Pad Pro 12.9-inch 4</string>
+	<key>iPad13,8</key>
+	<string>iPad Pro 12.9-inch 5</string>
+	<key>iPad13,9</key>
+	<string>iPad Pro 12.9-inch 5</string>
+	<key>iPad13,10</key>
+	<string>iPad Pro 12.9-inch 5</string>
+	<key>iPad13,11</key>
+	<string>iPad Pro 12.9-inch 5</string>
 </dict>
 </plist>

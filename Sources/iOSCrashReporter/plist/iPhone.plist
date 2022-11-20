@@ -86,5 +86,23 @@
 	<string>iPhone 12 Pro</string>
 	<key>iPhone13,4</key>
 	<string>iPhone 12 Pro Max</string>
+	<key>iPhone14,4</key>
+	<string>iPhone 13 mini</string>
+	<key>iPhone14,5</key>
+	<string>iPhone 13</string>
+	<key>iPhone14,2</key>
+	<string>iPhone 13 Pro</string>
+	<key>iPhone14,3</key>
+	<string>iPhone 13 Pro Max</string>
+	<key>iPhone14,6</key>
+	<string>iPhone SE 3</string>
+	<key>iPhone14,7</key>
+	<string>iPhone 14</string>
+	<key>iPhone14,8</key>
+	<string>iPhone 14 Plus</string>
+	<key>iPhone15,2</key>
+	<string>iPhone 14 Pro</string>
+	<key>iPhone15,3</key>
+	<string>iPhone 14 Pro Max</string>
 </dict>
 </plist>
