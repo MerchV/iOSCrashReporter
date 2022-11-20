@@ -58,7 +58,7 @@ import iOSCrashReporter
 struct MyApp: App {
 
     init() {
-        _ = CrashReporter(URL(string: "https://your-web-host.com/crash.php")!)
+        _ = CrashReporter(URL(string: "https://your-web-host.com/crash.php")!) // initialize with the URL to your web service
     }
 
     var body: some Scene {
@@ -67,7 +67,7 @@ struct MyApp: App {
         }
     }
 }
-
+```
 
 
 ## TESTING
