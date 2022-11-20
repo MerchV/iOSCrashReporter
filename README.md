@@ -6,7 +6,9 @@ This package can be added to an iOS project to capture crashes (both signals and
 
 ## INSTALLATION
 #### Swift Package Manager
-Add https://github.com/MerchV/iOSCrashReporter as a dependency using the master branch.
+```
+.package(url: "https://github.com/MerchV/iOSCrashReporter ", from: "1.0.0")
+```
 
 
 ## INSTRUCTIONS
