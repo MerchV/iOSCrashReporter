@@ -28,14 +28,11 @@ This PHP file will receive the subject and body parameters sent in an HTTP POST 
 
 ## CONFIGURATION
 
-1. Import iOSCrashReporter
-2. Set the URL to your PHP file to the static ENDPOINT variable on CrashReporter.
-3. Initialize CrashReporter. You don't need to keep a reference to it.
 
 #### In AppDelegate:
 ```
 import UIKit
-import iOSCrashReporter // 1
+import iOSCrashReporter // import iOSCrashReporter
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -43,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        _ = CrashReporter(URL(string: "https://your-web-host.com/crash.php")!)
+        _ = CrashReporter(URL(string: "https://your-web-host.com/crash.php")!) // initialize with the URL to your web service
         return true
     }
 
