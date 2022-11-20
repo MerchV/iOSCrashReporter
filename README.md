@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 #### In a SwiftUI App:
 ```
 import SwiftUI
-import iOSCrashReporter
+import iOSCrashReporter // import iOSCrashReporter
 
 @main
 struct MyApp: App {
